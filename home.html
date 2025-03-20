@@ -297,6 +297,87 @@
             .highlight {
                 font-size: 2.8rem;
             }
+            
+            .beta-badge {
+                font-size: 12px;
+                padding: 5px 12px;
+                margin-top: 10px;
+            }
+            
+            .countdown {
+                font-size: 12px;
+                padding: 5px 12px;
+                margin-top: 10px;
+            }
+            
+            .beta-badge .dot {
+                width: 6px;
+                height: 6px;
+            }
+        }
+        
+        /* Beta indicator styles */
+        .beta-badge {
+            position: relative;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5);
+            z-index: 5;
+            transform: rotate(0deg);
+            animation: pulse 2s infinite;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            margin-right: 10px;
+        }
+        
+        .beta-badge .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10ff00;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+        
+        .countdown {
+            position: relative;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 5;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .countdown-value {
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes blink {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
         }
     </style>
 </head>
@@ -339,6 +420,14 @@
         <div>
             <h1 class="main-title text-3xl md:text-4xl font-bold mb-4">Easiest Way<br>To <span class="highlight">Play</span> and <span class="highlight">Win</span></h1>
             <p class="text-lg md:text-xl mb-6 text-gray-300">Experience the universe at your fingertips — All in one place</p>
+            
+            <!-- Beta indicator and countdown -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <div class="countdown">
+                    This is BETA version, the Official launch in <span class="countdown-value" id="countdown-days">15</span> days
+                </div>
+            </div>
+            
             <button class="cta-button text-white font-bold py-3 px-6 rounded-full text-base md:text-lg play-button">
                 Start Playing
             </button>
@@ -380,6 +469,28 @@
                     document.body.style.overflow = '';
                 });
             });
+            
+            // Setup the launch date (15 days from now)
+            const launchDate = new Date();
+            launchDate.setDate(launchDate.getDate() + 15);
+            
+            // Update countdown
+            function updateCountdown() {
+                const currentDate = new Date();
+                const difference = launchDate - currentDate;
+                
+                // Calculate days remaining
+                const daysRemaining = Math.ceil(difference / (1000 * 60 * 60 * 24));
+                
+                // Update the countdown text
+                document.getElementById('countdown-days').textContent = daysRemaining;
+            }
+            
+            // Call it once on load
+            updateCountdown();
+            
+            // Then update it daily
+            setInterval(updateCountdown, 1000 * 60 * 60 * 24);
         });
     </script>
     <script>
