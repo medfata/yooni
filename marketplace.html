@@ -674,6 +674,16 @@
     
     <div class="stars" id="stars"></div>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playbtns = document.querySelectorAll('.play-button');
+            playbtns.forEach((btn) => {
+                btn.addEventListener('click', function() {
+                window.open('dist/index.html', '_blank');
+            })
+            });
+        });
+    </script>
+    <script>
         const buy_buttons = document.querySelectorAll(".buy-button");
         buy_buttons.forEach(btn => {
             let timeoutId;
