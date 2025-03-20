@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #030712;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 25% 10%, rgba(255, 255, 255, 0.9) 1px, transparent 0),
+                radial-gradient(1.5px 1.5px at 75% 35%, rgba(255, 255, 255, 0.7) 1px, transparent 0),
+                radial-gradient(2px 2px at 15% 55%, rgba(255, 255, 255, 0.6) 2px, transparent 0),
+                radial-gradient(2.5px 2.5px at 60% 80%, rgba(255, 255, 255, 0.8) 2px, transparent 0),
+                radial-gradient(1px 1px at 40% 15%, rgba(137, 180, 250, 0.7) 1px, transparent 0),
+                radial-gradient(1.5px 1.5px at 85% 25%, rgba(172, 148, 250, 0.8) 1px, transparent 0),
+                radial-gradient(2px 2px at 30% 65%, rgba(120, 133, 230, 0.6) 2px, transparent 0),
+                radial-gradient(3px 3px at 90% 70%, rgba(150, 165, 255, 0.8) 3px, transparent 0),
+                radial-gradient(0.5px 0.5px at 45% 5%, rgba(255, 255, 255, 0.7) 1px, transparent 0),
+                radial-gradient(0.8px 0.8px at 65% 45%, rgba(255, 255, 255, 0.5) 1px, transparent 0),
+                radial-gradient(0.7px 0.7px at 10% 85%, rgba(255, 255, 255, 0.6) 1px, transparent 0),
+                radial-gradient(1.2px 1.2px at 95% 95%, rgba(255, 255, 255, 0.5) 1px, transparent 0),
+                radial-gradient(1.5px 1.5px at 50% 30%, rgba(214, 188, 250, 0.8) 1.5px, transparent 0),
+                radial-gradient(1.7px 1.7px at 70% 60%, rgba(148, 188, 250, 0.7) 1.7px, transparent 0),
+                radial-gradient(1.8px 1.8px at 20% 75%, rgba(180, 202, 250, 0.6) 1.8px, transparent 0);
+            background-size: 350px 350px;
+            z-index: -1;
+        }
+        
+        /* Nebula effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 35%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 60%, rgba(147, 51, 234, 0.08) 0%, transparent 55%),
+                radial-gradient(circle at 40% 80%, rgba(79, 70, 229, 0.09) 0%, transparent 40%);
+            z-index: -1;
+            opacity: 0.8;
+        }
+        
+        /* Twinkling star animation */
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        .logo {
+            width: 200px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        .hero {
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            margin-top: 12rem;
+        }
+        .cta-button {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.7);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background-color: rgb(0 0 0 / 30%);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            border-radius: 100px;
+            margin: 40px auto;
+            width: calc(100% - 900px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            margin-left: 40px;
+        }
+        .nav-links a {
+            font-weight: 500;
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s;
+            color: #e2e8f0;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            padding: 5px 10px;
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a.active {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+        .nav-links a.active:after {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+        }
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        .play-button {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+            color: #fff;
+            border-radius: 100px;
+            padding: 10px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            border: none;
+            font-size: 15px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo-header {
+            width: auto;
+            height: 28px;
+        }
+        .user-icon {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        .user-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.7);
+        }
+        .main-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #a0aec0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+        }
+        .highlight {
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 5rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen">
+    <header class="header">
+        <div class="logo-container">
+            <img src="assets/logo.png" alt="Game Logo" class="logo-header">
+        </div>
+        <nav class="nav-links">
+            <a href="home.html" class="active">Home</a>
+            <a href="marketplace.html">Market Place</a>
+            <a href="#">About</a>
+        </nav>
+        <button class="play-button">
+            Start Playing
+        </button>
+    </header>
+    <div class="hero">
+        <div>
+            <h1 class="main-title">Easiest Way<br>To <span class="highlight">Play</span> and <span class="highlight">Win</span></h1>
+            <p class="text-xl mb-10 text-gray-300">Experience the universe at your fingertips — All in one place</p>
+            <button class="cta-button text-white font-bold py-4 px-8 rounded-full text-lg">
+                Start Playing
+            </button>
+        </div>
+    </div>
+    
+    <div class="stars" id="stars"></div>
+    
+    <script>
+        // Create random stars with varying sizes and animation delays
+        const starsContainer = document.getElementById('stars');
+        const starCount = 150; // Number of stars
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            
+            // Random position
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            
+            // Random size between 1-3px
+            const size = Math.random() * 2 + 1;
+            
+            // Random animation delay
+            const delay = Math.random() * 4;
+            
+            // Random brightness variation (white to blue/purple tint)
+            const hue = Math.random() > 0.7 ? `hsl(${220 + Math.random() * 60}, 100%, 90%)` : '#fff';
+            
+            // Apply styles
+            star.style.left = `${left}%`;
+            star.style.top = `${top}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.animationDelay = `${delay}s`;
+            star.style.backgroundColor = hue;
+            
+            // Add a glow effect to larger stars
+            if (size > 2) {
+                star.style.boxShadow = `0 0 ${size}px ${size/2}px ${hue}`;
+            }
+            
+            starsContainer.appendChild(star);
+        }
+    </script>
+</body>
+</html> 

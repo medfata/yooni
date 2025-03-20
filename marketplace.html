@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #030712;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 25% 10%, rgba(255, 255, 255, 0.9) 1px, transparent 0),
+                radial-gradient(1.5px 1.5px at 75% 35%, rgba(255, 255, 255, 0.7) 1px, transparent 0),
+                radial-gradient(2px 2px at 15% 55%, rgba(255, 255, 255, 0.6) 2px, transparent 0),
+                radial-gradient(2.5px 2.5px at 60% 80%, rgba(255, 255, 255, 0.8) 2px, transparent 0),
+                radial-gradient(1px 1px at 40% 15%, rgba(137, 180, 250, 0.7) 1px, transparent 0),
+                radial-gradient(1.5px 1.5px at 85% 25%, rgba(172, 148, 250, 0.8) 1px, transparent 0),
+                radial-gradient(2px 2px at 30% 65%, rgba(120, 133, 230, 0.6) 2px, transparent 0),
+                radial-gradient(3px 3px at 90% 70%, rgba(150, 165, 255, 0.8) 3px, transparent 0),
+                radial-gradient(0.5px 0.5px at 45% 5%, rgba(255, 255, 255, 0.7) 1px, transparent 0),
+                radial-gradient(0.8px 0.8px at 65% 45%, rgba(255, 255, 255, 0.5) 1px, transparent 0),
+                radial-gradient(0.7px 0.7px at 10% 85%, rgba(255, 255, 255, 0.6) 1px, transparent 0),
+                radial-gradient(1.2px 1.2px at 95% 95%, rgba(255, 255, 255, 0.5) 1px, transparent 0),
+                radial-gradient(1.5px 1.5px at 50% 30%, rgba(214, 188, 250, 0.8) 1.5px, transparent 0),
+                radial-gradient(1.7px 1.7px at 70% 60%, rgba(148, 188, 250, 0.7) 1.7px, transparent 0),
+                radial-gradient(1.8px 1.8px at 20% 75%, rgba(180, 202, 250, 0.6) 1.8px, transparent 0);
+            background-size: 350px 350px;
+            z-index: -1;
+        }
+        
+        /* Nebula effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 35%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 60%, rgba(147, 51, 234, 0.08) 0%, transparent 55%),
+                radial-gradient(circle at 40% 80%, rgba(79, 70, 229, 0.09) 0%, transparent 40%);
+            z-index: -1;
+            opacity: 0.8;
+        }
+        
+        /* Twinkling star animation */
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        .logo-header {
+            width: auto;
+            height: 28px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background-color: rgb(0 0 0 / 30%);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            border-radius: 100px;
+            margin: 40px auto;
+            width: calc(100% - 900px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            margin-left: 40px;
+        }
+        .nav-links a {
+            font-weight: 500;
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s;
+            color: #e2e8f0;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            padding: 5px 10px;
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a.active {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+        .nav-links a.active:after {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+        }
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        .play-button {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6, #9333ea);
+            color: #fff;
+            border-radius: 100px;
+            padding: 10px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            border: none;
+            font-size: 15px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Marketplace specific styles */
+        .main-container {
+            margin-top: 150px;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 20px;
+            z-index: 1;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #fff, #a0aec0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .filter-bar {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+        }
+        
+        .product-card {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+        }
+        
+        .product-details {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        
+        .product-price {
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .product-description {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .buy-button {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .buy-button:hover {
+            background: linear-gradient(135deg, #1e40af, #3b82f6, #9333ea);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        
+        .select-dropdown {
+            background-color: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .select-dropdown:focus {
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center min-h-screen">
+    <header class="header">
+        <div class="logo-container">
+            <img src="logo.png" alt="Game Logo" class="logo-header">
+        </div>
+        <nav class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="marketplace.html" class="active">Market Place</a>
+            <a href="#">About</a>
+        </nav>
+        <button class="play-button">
+            Start Playing
+        </button>
+    </header>
+    
+    <div class="main-container">
+        
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Animals Section -->
+            <div class="col-span-full mb-6">
+                <h2 class="text-xl font-bold text-white">Animals</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Product Card 1 -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Animal/Cat.png" alt="Cat" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Cat</h3>
+                    <p class="product-price">500 Credits</p>
+                    <p class="product-description">Adorable cat companion that follows you on adventures. Meows for attention occasionally.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Product Card 2 -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Animal/Christmas.png" alt="Christmas Penguin" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Christmas Penguin</h3>
+                    <p class="product-price">750 Credits</p>
+                    <p class="product-description">Festive penguin companion dressed for the holidays. Brings cheer wherever you go.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Product Card 3 -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Animal/Dog.png" alt="Dog" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Dog</h3>
+                    <p class="product-price">1200 Credits</p>
+                    <p class="product-description">Loyal dog companion that helps find hidden items. Man's best friend in virtual form.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Product Card 4 -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Animal/Raccoon.png" alt="Raccoon" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Raccoon</h3>
+                    <p class="product-price">300 Credits</p>
+                    <p class="product-description">Mischievous raccoon that collects extra coins for you. Watch your belongings though!</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Face Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Faces</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Face Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Face/Normal.png" alt="Normal Face" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Normal Face</h3>
+                    <p class="product-price">250 Credits</p>
+                    <p class="product-description">The standard face with a neutral expression. Perfect for everyday adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Face/Chinese.png" alt="Chinese Face" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Chinese Face</h3>
+                    <p class="product-price">350 Credits</p>
+                    <p class="product-description">A unique face style with distinctive features. Show your character's personality.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Face/Sad big eyes.png" alt="Sad Big Eyes" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Sad Big Eyes</h3>
+                    <p class="product-price">400 Credits</p>
+                    <p class="product-description">Expressive sad eyes that will melt hearts and win sympathy in your adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Hair Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Hairstyles</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Hair Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Hair/Buns.png" alt="Buns Hairstyle" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Buns Hairstyle</h3>
+                    <p class="product-price">450 Credits</p>
+                    <p class="product-description">Cute double bun hairstyle that gives your character a playful and trendy look.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Hair/Pigtails.png" alt="Pigtails Hairstyle" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Pigtails Hairstyle</h3>
+                    <p class="product-price">425 Credits</p>
+                    <p class="product-description">Classic pigtails that add a youthful and energetic vibe to your character.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Hair/Short bob.png" alt="Short Bob Hairstyle" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Short Bob Hairstyle</h3>
+                    <p class="product-price">475 Credits</p>
+                    <p class="product-description">Sleek short bob hairstyle that offers a modern and sophisticated look.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Jacket Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Jackets</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Jacket Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Jacket/Skulls.png" alt="Skulls Jacket" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Skulls Jacket</h3>
+                    <p class="product-price">650 Credits</p>
+                    <p class="product-description">Edgy jacket with skull patterns that makes a bold fashion statement.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Jacket/Caution.png" alt="Caution Jacket" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Caution Jacket</h3>
+                    <p class="product-price">600 Credits</p>
+                    <p class="product-description">High-visibility jacket with caution patterns - perfect for standing out in a crowd.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Jacket/Overshirt.png" alt="Overshirt Jacket" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Overshirt Jacket</h3>
+                    <p class="product-price">550 Credits</p>
+                    <p class="product-description">Casual overshirt that provides a relaxed yet stylish look for any occasion.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Pants Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Pants</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Pants Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Pants/Bootcut.png" alt="Bootcut Pants" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Bootcut Pants</h3>
+                    <p class="product-price">550 Credits</p>
+                    <p class="product-description">Classic bootcut pants with a slight flare at the bottom, providing a timeless look.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Pants/Jeans.png" alt="Jeans" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Jeans</h3>
+                    <p class="product-price">600 Credits</p>
+                    <p class="product-description">Durable denim jeans that are both comfortable and stylish for any casual occasion.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Pants/Jogger.png" alt="Jogger Pants" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Jogger Pants</h3>
+                    <p class="product-price">525 Credits</p>
+                    <p class="product-description">Comfortable jogger pants with tapered legs and elastic cuffs for maximum comfort.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Pants/Ripped.png" alt="Ripped Jeans" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Ripped Jeans</h3>
+                    <p class="product-price">650 Credits</p>
+                    <p class="product-description">Trendy ripped jeans that add an edgy and fashionable touch to your character's look.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Shirt Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Shirts</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Shirt Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Shirt/Sleeves.png" alt="Sleeves Shirt" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Sleeves Shirt</h3>
+                    <p class="product-price">400 Credits</p>
+                    <p class="product-description">Classic long-sleeved shirt that provides comfort and style for all your adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Shirt/Snow.png" alt="Snow Shirt" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Snow Shirt</h3>
+                    <p class="product-price">450 Credits</p>
+                    <p class="product-description">Winter-themed shirt with snowflake patterns perfect for cold weather adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Shirt/Star.png" alt="Star Shirt" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Star Shirt</h3>
+                    <p class="product-price">425 Credits</p>
+                    <p class="product-description">Shirt decorated with star patterns that makes your character shine in the virtual world.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Shirt/Sun.png" alt="Sun Shirt" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Sun Shirt</h3>
+                    <p class="product-price">475 Credits</p>
+                    <p class="product-description">Bright and cheerful shirt with sun patterns, bringing positive vibes to your game.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Shoes Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Shoes</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Shoes Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Shoes/Boots.png" alt="Boots" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Boots</h3>
+                    <p class="product-price">700 Credits</p>
+                    <p class="product-description">Sturdy boots that provide extra protection and style for rugged adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Shoes/Saddle.png" alt="Saddle Shoes" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Saddle Shoes</h3>
+                    <p class="product-price">650 Credits</p>
+                    <p class="product-description">Classic two-toned saddle shoes that add a vintage touch to your character's style.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Shoes/Vans.png" alt="Vans Shoes" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Vans-style Shoes</h3>
+                    <p class="product-price">600 Credits</p>
+                    <p class="product-description">Casual skate-inspired shoes that are perfect for everyday virtual adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Socks Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Socks</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Socks Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Socks/Candy cane.png" alt="Candy Cane Socks" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Candy Cane Socks</h3>
+                    <p class="product-price">300 Credits</p>
+                    <p class="product-description">Festive socks with red and white candy cane stripes, perfect for holiday events.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Socks/Fishnet.png" alt="Fishnet Socks" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Fishnet Socks</h3>
+                    <p class="product-price">350 Credits</p>
+                    <p class="product-description">Trendy fishnet socks that add an edgy and fashionable element to your outfit.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Socks/Wound.png" alt="Wound Socks" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Wound Socks</h3>
+                    <p class="product-price">325 Credits</p>
+                    <p class="product-description">Unique socks with a wound-like design, perfect for spooky or themed events.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <!-- Weapons Section -->
+            <div class="col-span-full mb-6 mt-10">
+                <h2 class="text-xl font-bold text-white">Weapons</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mt-2"></div>
+            </div>
+            
+            <!-- Weapons Items -->
+            <div class="product-card">
+                <img src="assets/yooni_products/Weapons/Battleaxe.png" alt="Battleaxe" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Battleaxe</h3>
+                    <p class="product-price">1200 Credits</p>
+                    <p class="product-description">Powerful battleaxe that deals heavy damage and intimidates enemies with its design.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Weapons/Power neon.png" alt="Power Neon Weapon" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Power Neon</h3>
+                    <p class="product-price">1500 Credits</p>
+                    <p class="product-description">Futuristic neon-powered weapon that emits a powerful glow and deals energy damage.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <img src="assets/yooni_products/Weapons/Sword.png" alt="Sword" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Sword</h3>
+                    <p class="product-price">1000 Credits</p>
+                    <p class="product-description">Classic sword weapon with a sharp blade for close combat encounters in your adventures.</p>
+                    <button class="buy-button">Buy Now</button>
+                </div>
+            </div>
+    </div>
+    
+    <div class="stars" id="stars"></div>
+    <script>
+        const buy_buttons = document.querySelectorAll(".buy-button");
+        buy_buttons.forEach(btn => {
+            let timeoutId;
+            btn.addEventListener("click", () => {
+                btn.textContent = "Coming Soon";
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    btn.textContent = "Buy Now";
+                }, 1500);
+            })
+        })
+    </script>
+    
+    <script>
+        // Create random stars with varying sizes and animation delays
+        const starsContainer = document.getElementById('stars');
+        const starCount = 150; // Number of stars
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            
+            // Random position
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            
+            // Random size between 1-3px
+            const size = Math.random() * 2 + 1;
+            
+            // Random animation delay
+            const delay = Math.random() * 4;
+            
+            // Random brightness variation (white to blue/purple tint)
+            const hue = Math.random() > 0.7 ? `hsl(${220 + Math.random() * 60}, 100%, 90%)` : '#fff';
+            
+            // Apply styles
+            star.style.left = `${left}%`;
+            star.style.top = `${top}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.animationDelay = `${delay}s`;
+            star.style.backgroundColor = hue;
+            
+            // Add a glow effect to larger stars
+            if (size > 2) {
+                star.style.boxShadow = `0 0 ${size}px ${size/2}px ${hue}`;
+            }
+            
+            starsContainer.appendChild(star);
+        }
+        
+        // Add category data attributes to product cards
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add data-category attributes to product cards
+            const productCards = document.querySelectorAll('.product-card');
+            const sectionHeaders = document.querySelectorAll('.col-span-full');
+            
+            // Animal products
+            productCards.forEach((card, index) => {
+                const imgSrc = card.querySelector('img').src;
+                
+                if (imgSrc.includes('/Animal/')) {
+                    card.setAttribute('data-category', 'animal');
+                } else if (imgSrc.includes('/Face/')) {
+                    card.setAttribute('data-category', 'face');
+                } else if (imgSrc.includes('/Hair/')) {
+                    card.setAttribute('data-category', 'hair');
+                } else if (imgSrc.includes('/Jacket/')) {
+                    card.setAttribute('data-category', 'jacket');
+                } else if (imgSrc.includes('/Pants/')) {
+                    card.setAttribute('data-category', 'pants');
+                } else if (imgSrc.includes('/Shirt/')) {
+                    card.setAttribute('data-category', 'shirt');
+                } else if (imgSrc.includes('/Shoes/')) {
+                    card.setAttribute('data-category', 'shoes');
+                } else if (imgSrc.includes('/Socks/')) {
+                    card.setAttribute('data-category', 'socks');
+                } else if (imgSrc.includes('/Weapons/')) {
+                    card.setAttribute('data-category', 'weapons');
+                }
+            });
+            
+            // Set category attributes for section headers
+            sectionHeaders.forEach((header) => {
+                const headerText = header.querySelector('h2').textContent.toLowerCase();
+                
+                if (headerText.includes('animal')) {
+                    header.setAttribute('data-category', 'animal');
+                } else if (headerText.includes('face')) {
+                    header.setAttribute('data-category', 'face');
+                } else if (headerText.includes('hairstyle')) {
+                    header.setAttribute('data-category', 'hair');
+                } else if (headerText.includes('jacket')) {
+                    header.setAttribute('data-category', 'jacket');
+                } else if (headerText.includes('pant')) {
+                    header.setAttribute('data-category', 'pants');
+                } else if (headerText.includes('shirt')) {
+                    header.setAttribute('data-category', 'shirt');
+                } else if (headerText.includes('shoe')) {
+                    header.setAttribute('data-category', 'shoes');
+                } else if (headerText.includes('sock')) {
+                    header.setAttribute('data-category', 'socks');
+                } else if (headerText.includes('weapon')) {
+                    header.setAttribute('data-category', 'weapons');
+                }
+            });
+            
+            // Set up category filter
+            const categorySelect = document.querySelector('.filter-bar .select-dropdown');
+            categorySelect.addEventListener('change', function() {
+                const selectedCategory = this.value;
+                
+                // Handle product cards
+                productCards.forEach(card => {
+                    if (selectedCategory === 'all' || card.getAttribute('data-category') === selectedCategory) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Handle section headers
+                sectionHeaders.forEach(header => {
+                    if (selectedCategory === 'all' || header.getAttribute('data-category') === selectedCategory) {
+                        header.style.display = 'block';
+                    } else {
+                        header.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
