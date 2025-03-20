@@ -231,14 +231,23 @@
         <div>
             <h1 class="main-title">Easiest Way<br>To <span class="highlight">Play</span> and <span class="highlight">Win</span></h1>
             <p class="text-xl mb-10 text-gray-300">Experience the universe at your fingertips — All in one place</p>
-            <button class="cta-button text-white font-bold py-4 px-8 rounded-full text-lg">
+            <button class="cta-button text-white font-bold py-4 px-8 rounded-full text-lg play-button">
                 Start Playing
             </button>
         </div>
     </div>
     
     <div class="stars" id="stars"></div>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playbtns = document.querySelectorAll('.play-button');
+            playbtns.forEach((btn) => {
+                btn.addEventListener('click', function() {
+                window.open('dist/index.html', '_blank');
+            })
+            });
+        });
+    </script>
     <script>
         // Create random stars with varying sizes and animation delays
         const starsContainer = document.getElementById('stars');
